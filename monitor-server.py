@@ -5,14 +5,12 @@ from flask import Flask, request
 
 app = Flask(__name__)
 
+
 @app.route('/', methods=['POST'])
 def get_data():
-    data = request.data
-    #if not data:
-    #    data = request.form.keys()[0] 
-    #    print 'key' + data
-    #    return data
-    print data
+    data = request.get_json()
+    if not data:
+        return "Null"
     return data
 
 
