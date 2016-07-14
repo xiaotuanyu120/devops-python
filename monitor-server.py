@@ -1,4 +1,4 @@
-#!/root/env26/bin/python
+#!./env/bin/python
 # -*- coding: utf-8 -*-
 
 from flask import Flask, request, jsonify
