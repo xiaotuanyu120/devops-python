@@ -7,18 +7,7 @@ import sys
 import psutil
 import json
 import urllib2
-
-
-def _cpu(args, args_num):
-    result = []
-    for i in range(args_num):
-        try:
-            getattr(psutil, args[i])
-        except AttributeError as e:
-            print e
-            continue
-        result.append(getattr(psutil, args[i])())
-    return result
+import cpu_m
 
 
 def get_ip():
@@ -46,7 +35,7 @@ if __name__ == "__main__":
     if args_len > 2:
         args_num = args_len - 2
         args = [sys.argv[x] for x in range(2, args_len)]
-        result = _cpu(args, args_num)
+        result = cpu_m.cpu(args, args_num)
         headers = {'Content-type':'application/json',}
         url = "http://127.0.0.1:5000/"
         json_post(url, result, header=headers)
