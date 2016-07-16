@@ -6,14 +6,15 @@ import sys
 
 
 def cpu(args, args_num):
-    result = []
+    reuslt = {}
+    result['items'] = 'cpu'
     for i in range(args_num):
         try:
             getattr(psutil, args[i])
         except AttributeError as e:
             print e
             continue
-        result.append(getattr(psutil, args[i])())
+        result[args[i]] = getattr(psutil, args[i])()
     return result
 
 
