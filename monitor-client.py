@@ -1,29 +1,12 @@
 #!./env/bin/python
 # -*- coding: utf-8 -*-
 
-"for monitor host's information"
+"monitor client"
 
 import sys
-import psutil
 import json
 import urllib2
-import socket
-
-import cpu_m
-
-
-def get_ip():
-    'get ip address of the client'
-    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    try:
-        s.connect(('8.8.8.8', 80))
-        ip = s.getsockname()[0]
-    except:
-        e = sys.exc_info()[0]
-        return
-    finally:
-        s.close()
-    return ip
+import monitor_scripts
 
 
 def json_post(url, data, header):
@@ -34,16 +17,35 @@ def json_post(url, data, header):
     return response.read()
 
 
-if __name__ == "__main__":
-    args_len = len(sys.argv)
-    if args_len > 2:
-        args_num = args_len - 2
-        args = [sys.argv[x] for x in range(2, args_len)]
-        cpu_result = cpu_m.cpu(args, args_num)
-        result = {}
-        result[get_ip()] = cpu_result
-        headers = {'Content-type':'application/json',}
-        url = "http://127.0.0.1:5000/"
-        json_post(url, result, header=headers)
+def get_mon_data(data):
+    mon_data = {}
+    if isinstance(data, str):
+        mon_data[data] = getattr(monitor_scripts, data)()
+    elif isinstance(data, list):
+        for item in data:
+            try:
+                item_d = getattr(monitor_scripts, item)()
+            except:
+                print sys.exe_info()[0]
+                continue
+            mon_data[item] = item_d
+    return mon_data
+
+
+def get_args(args):
+    args_len = len(args)
+    if args_len == 2:
+        return args[1]
+    elif args_len > 2:
+        return [args[x] for x in range(1, args_len)]
     else:
         print "ERROR: too less arguments!"
+        return
+
+
+if __name__ == "__main__":
+    mon_items = get_args(sys.argv)
+    mon_data = get_mon_data(mon_items)
+    header = {'Content-type': 'application/json'}
+    url = "http://127.0.0.1:5000/"
+    json_post(url, mon_data, header=header)
