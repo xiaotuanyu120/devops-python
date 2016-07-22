@@ -6,7 +6,7 @@
 import sys
 import json
 import urllib2
-import monitor_scripts
+import client_scripts
 
 
 def json_post(url, data, header):
@@ -20,11 +20,11 @@ def json_post(url, data, header):
 def get_mon_data(data):
     mon_data = {}
     if isinstance(data, str):
-        mon_data[data] = getattr(monitor_scripts, data)()
+        mon_data[data] = getattr(client_scripts, data)()
     elif isinstance(data, list):
         for item in data:
             try:
-                item_d = getattr(monitor_scripts, item)()
+                item_d = getattr(client_scripts, item)()
             except:
                 print sys.exe_info()[0]
                 continue
