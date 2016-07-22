@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from flask import Flask, request
+from rrdtool import update
 
 app = Flask(__name__)
 
@@ -10,7 +11,7 @@ app = Flask(__name__)
 def get_data():
     data = _encode_it(request.get_json())
     if not data:
-        print "no data"
+        print "Error: don't get any data"
         return "Null"
     print data, type(data)
     return str(data)
@@ -25,11 +26,6 @@ def _encode_it(data):
         return dict([(_encode_it(key), _encode_it(value))
                     for key, value in data.iteritems()])
     return data
-# python3
-# return {
-#     _encode_it(key): _encode_it(value)
-#     for key, value in data.iteritems()
-# }
 
 
 if __name__ == '__main__':
