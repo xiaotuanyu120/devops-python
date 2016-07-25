@@ -6,8 +6,8 @@ import time
 
 def create_rrd(host, ds_name, step=300):
     cur_time = str(int(time.time()))
-    rrd_name = host + '.rrd'
-    ds_str = 'DS:' + ds_name + ':COUNNTER:10:0:U'
+    rrd_name = '%s-%s.rrd' % (host, ds_name)
+    ds_str = 'DS:' + ds_name + ':COUNTER:10:0:U'
 
     rrd = rrdtool.create(
         rrd_name,
